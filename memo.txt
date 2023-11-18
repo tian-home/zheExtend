@@ -1,0 +1,211 @@
+[cmd]
+	窗口+R -> 三键回车
+	notepad
+	calc
+	mspaint
+	control
+	msinfo32
+	msconfig
+	services.msc
+
+[MongoDB]
+	D:\mongodb\bin设置为环境变量
+	cmd启动：
+		mongod --dbpath D:\mongodb\data
+
+	服务启动：
+		启动文件：
+			dbpath=D:\mongodb\data\db
+			logpath=D:\mongodb\log\mongod.log
+		启动命令：
+			net start mongodb
+			net stop mongodb
+		查看版本
+			> db.version()
+			4.0.28			
+
+	语法：
+		use admin
+		> db
+			test
+		> show dbs
+			admin   0.000GB
+			config  0.000GB
+			local   0.000GB
+		> db.qa.insert({"name":"aaa","age":20})
+			WriteResult({ "nInserted" : 1 })
+		> db.dropDatabase()
+			{ "dropped" : "zhihu", "ok" : 1 }
+		> db.qa.find()
+			{ "_id" : ObjectId("6436a76d73aa96a3cf98add9"), "title" : "xxx", "content" : "aaa" }
+		db.qa.find()
+			{ "_id" : ObjectId("6436a76d73aa96a3cf98add9"), "title" : "xxx", "content" : "aaa" }
+			{ "_id" : ObjectId("643d424b326444e094fcee26"), "username" : "aaa" }
+			{ "_id" : ObjectId("64413f539908952ef7455deb"), "username" : "aaa" }
+			{ "_id" : ObjectId("64413fb75d22b062a648e6fc"), "username" : "xxx", "password" : 123 }
+			{ "_id" : ObjectId("64414139a07c9623e6ee6b47"), "战士" : "李信", "物理攻击" : 1200 }
+			{ "_id" : ObjectId("64414139a07c9623e6ee6b48"), "法师" : "周瑜", "物理攻击" : 10, "魔法攻击" : 500 }
+	设置密码：
+		use admin
+		db.createUser({ user: "admin", pwd: "123", roles: [{ role: "userAdminAnyDatabase", db: "admin" }] })
+		db.createUser({user: "root",pwd: "123", roles: [ { role: "root", db: "admin" } ]})
+		# https://blog.csdn.net/wdw984/article/details/126154333
+	PYmongo语法：
+		import pymongo
+
+		# 获取连接mongodb的对象
+		# client = pymongo.MongoClient("127.0.0.1", port=27017)
+		client = pymongo.MongoClient(host="127.0.0.1", port=27017, username="admin", password="123")
+
+		print(client)
+
+		# 获取数据库
+		db = client.zhihu
+		# db = client["zhihu"]
+
+		# 获取集合
+		collection = db.qa
+		# collection = db["qa"]
+
+		# 写入数据
+		# collection.insert_one({"username": "xxx", "password": 123})
+		# collection.insert_many([
+		#     {
+		#         "战士": "李信",
+		#         "物理攻击": 1200
+		#     },
+		#     {
+		#         "法师": "周瑜",
+		#         "物理攻击": 10,
+		#         "魔法攻击": 500
+		#     }
+		# ])
+
+		# 查找数据
+		cursor = collection.find()
+		for x in cursor:
+		    print(x)
+
+		result = collection.find_one()
+		print(result)
+
+		# collection.update_one({"username": "aaa"}, {"$set": {"username": "小王"}})
+
+		# collection.update_many({"username": "小王"}, {"$set": {"username": "老王"}})
+
+		# collection.delete_one({"username": "老王"})
+
+		collection.delete_many({"username": "老王"})
+
+
+
+[MySQL]
+	cmd启动:
+		net start mysql80
+		net stop mysql80
+		mysql -V
+	登陆：
+		mysql -uroot -proot
+		mysql -h127.0.0.1 -uroot -proot
+		mysql -h39.98.59.77 -uroot -p
+	DDL :
+		库操作
+			CREATE DATABASE IF NOT EXISTS db2;
+			CREATE DATABASE db3 CHARACTER SET gbk;
+			SHOW CREATE DATABASE db3;
+			SHOW DATABASES;
+			ALTER DATABASE db2 DEFAULT CHARACTER SET gbk;
+			DROP DATBASE db3;
+			SELECT DATABASE();
+			USE db1;
+		表操作
+			数据类型:{int:整数,double:浮点,varchar:字符串,date:日期}
+			CREATE TABLE student(id int,name varchar(20),birthday date,sex char(1));
+			SHOW TABLES;
+			DESC student;
+			SHOW CREATE TABLE student;
+			CREATE TABLE student1 LIKE student; #复制表
+			DROP TABLE student1;
+			DROP TABLE IF EXISTS s1;
+			ALTER TABLE student ADD remark varchar(20);
+			ALTER TABLE student MODIFY remark varchar(100); #改变列类型
+			ALTER TABLE student change remark intro varchar(30); #改变列名
+			RENAME TABLE student TO s1; #修改table名
+			ALTER TABLE s1 CHARACTER SET gbk; #修改字符集
+
+			CREATE TABLE student(id int,name varchar(20),age int,sex char(1),birthday date,address varchar(200),phone varchar(50),math double,english double);
+
+			INSERT INTO student(id,name,age,sex,birthday,address,phone,math,english)values(1,"zhangsan",10,"男","2012-4-12","上海","10238947346",70,98.5);
+
+			INSERT INTO student values(2,'lisi',11,"女","2002-10-23","上海","17777777",60,79.6);
+
+			INSERT INTO student(id,name,sex)values(3,"wangwu",NULL);
+
+			蠕虫复制
+
+			CREATE TABLE student1 like student;
+			INSERT INTO student1 SELECT * FROM student;
+			INSERT INTO student2(id,name,sex) SELECT id,name,sex FROM student;
+
+			更新数据
+
+			UPDATE student1 SET sex='女';
+			UPDATE student1 SET sex='男' WHERE id=2;
+			UPDATE student1 SET sex='男',age=12,address='上海市' WHERE id = 3;
+
+			删除数据
+
+			DELETE FROM student3 WHERE id = 3;
+			TRUNCATE TABLE student3; #清空表
+
+
+ 	DQL	
+		SELECT NAME,Population FROM city;
+		SELECT DISTINCT Continent FROM COUNTRY;
+		SELECT SurfaceArea+Population AS total FROM ct; #列相加
+		SELECT *, SurfaceArea+Population AS total FROM ct;
+		SELECT NAME,Population 人口,Population+10000 P FROM ct;
+		SELECT * FROM country WHERE Population>100000000;
+		SELECT * FROM country WHERE Continent="Asia";
+		SELECT * FROM country WHERE Continent='Asia' AND Population>50000000;
+		SELECT * FROM country WHERE NAME IN('China','Japan','India');
+		SELECT * FROM country WHERE NAME NOT IN('China','Japan','India');
+		SELECT * FROM country WHERE Population>50000000 AND Population<100000000;
+		SELECT * FROM country WHERE Population BETWEEN 50000000 AND 100000000;
+		SELECT * FROM country WHERE NAME LIKE 'C%';
+		SELECT * FROM country WHERE NAME LIKE '%CH%';
+		SELECT * FROM country WHERE NAME LIKE 'CH__';
+		SELECT * FROM country WHERE Population>100000000 ORDER BY Population DESC;
+		SELECT * FROM country WHERE Population>100000000 ORDER BY SurfaceArea ASC;
+		#聚合函数
+		SELECT COUNT(CODE) FROM country;
+		SELECT COUNT(*) FROM country;
+		SELECT COUNT(*) FROM country WHERE Population>100000000;
+		SELECT SUM(Population) FROM country WHERE Continent='Asia';
+		SELECT SUM(Population),Continent FROM country GROUP BY Continent;、
+		SELECT COUNT(*),Continent FROM country WHERE Population>50000000 GROUP BY Continent;
+		SELECT COUNT(*),Continent FROM country WHERE Population>50000000  GROUP BY Continent HAVING COUNT(*)>5;
+
+		#约束
+		CREATE TABLE hero ( id int primary key, name1 varchar(20), age int )； 
+		CREATE TABLE hero2(
+			id INT PRIMARY KEY AUTO_INCREMENT,
+			name1 VARCHAR(20) NOT NULL,
+			age INT DEFAULT 10
+		);
+		INSERT INTO hero2(name1,age)VALUES("吕布",45);
+
+
+
+		
+		
+
+
+		
+
+[python]
+	编码
+		ASC2A
+		GB2312
+		utf-8
+		

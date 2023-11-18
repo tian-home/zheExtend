@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function getBrowser(){
+            // var explorer = navigator.userAgent.toLowerCase()
+            var explorer = navigator.userAgent.toLowerCase(),browser
+            if(explorer.indexOf("msie")>-1){
+                browser = "IE"
+            }else if(explorer.indexOf("chrome")>-1){
+                browser = "chrome"
+            }else if(explorer.indexOf("opera")>-1){
+                browser = "opera"
+            }else if(explorer.indexOf("firefox")>-1){
+                browser = "firefox"
+            }
+            return browser
+            // return explorer
+        }
+        var explorer = getBrowser()
+        console.log("您目前使用的是："+explorer+"浏览器")
+        // console.log(explorer)
+    </script>
+</body> 
+</html>
