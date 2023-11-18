@@ -50,7 +50,7 @@ class Spider():
         return anchors
 
     def __saveToMongoDB(self, anchors):
-        client = pymongo.MongoClient('mongodb://{}:{}@39.98.59.77:27017/'.format("tian01", "123"))
+        client = pymongo.MongoClient('mongodb://{}:{}@39.98.59.77:27017/'.format("***", "***"))
         mydb = client["caipu"]
         mycol = mydb["jiachangcai"]
         mycol.insert_many(anchors)
